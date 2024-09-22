@@ -1,0 +1,46 @@
+" Local additions to .vimrc
+" This file won't be overwritten by the update process
+
+" Auto-update function
+function! UpdateVimrc()
+    let l:url = "https://raw.githubusercontent.com/hendrikmi/dotfiles/main/vim/.vimrc"
+    let l:temp_file = expand("~/.vimrc.tmp")
+
+    echo "Downloading the latest .vimrc..."
+    let l:download_cmd = "curl -sSfL " . l:url . " -o " . l:temp_file
+    let l:download_output = system(l:download_cmd)
+    
+    if v:shell_error != 0
+        echoerr "Failed to download the latest .vimrc: " . l:download_output
+        return
+    endif
+
+    " Prepend the source command to the downloaded file
+    call system("echo '\" Main .vimrc file' > ~/.vimrc")
+    call system("echo '\" This file will be overwritten by the update process' >> ~/.vimrc")
+    call system("echo '' >> ~/.vimrc")
+    call system("echo '\" Source the local additions file' >> ~/.vimrc")
+    call system("echo 'if filereadable(expand(\"~/.vimrc.local\"))' >> ~/.vimrc")
+    call system("echo '    source ~/.vimrc.local' >> ~/.vimrc")
+    call system("echo 'endif' >> ~/.vimrc")
+    call system("echo '' >> ~/.vimrc")
+    call system("cat " . l:temp_file . " >> ~/.vimrc")
+
+    echo "Updated .vimrc successfully. Please restart Vim or source .vimrc to apply changes."
+    call delete(l:temp_file)
+endfunction
+
+" Command to trigger the update
+command! UpdateVimrc call UpdateVimrc()
+
+" Function to check for updates
+function! CheckForUpdates()
+    echo "Checking for .vimrc updates..."
+    call UpdateVimrc()
+endfunction
+
+" Optional: Automatically check for updates when Vim starts
+" Uncomment the following line if you want to check for updates on Vim startup
+" autocmd VimEnter * call CheckForUpdates()
+
+" Add any other local customizations here
