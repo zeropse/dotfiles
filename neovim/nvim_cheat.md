@@ -52,7 +52,7 @@
 ## Keybindings
 
 - **Leader Key**: Space (`<leader>`)
-- **File Actions**: 
+- **File Actions**:
   - Save: `<C-s>`
   - Save without auto-formatting: `<leader>sn`
   - Quit: `<C-q>`
@@ -60,29 +60,23 @@
   - Delete character without copying: `x`
 - **Scrolling and Centering**:
   - Scroll: `<C-d>`, `<C-u>`
-  - Find and center: `n`, `N`
-- **Window Resizing**: 
+- **Window Resizing**:
   - Resize: `<Up>`, `<Down>`, `<Left>`, `<Right>`
-- **Buffer Management**: 
+- **Buffer Management**:
   - Switch buffers: `<Tab>`, `<S-Tab>`
   - Close buffer: `<leader>x`, `<leader>b`
-- **Window Management**: 
+- **Window Management**:
   - Split: `<leader>v` (vertical), `<leader>h` (horizontal)
   - Equalize: `<leader>se`
   - Close split: `<leader>xs`
-- **Navigate Between Splits**: 
+- **Navigate Between Splits**:
   - `<C-k>`, `<C-j>`, `<C-h>`, `<C-l>`
-- **Tab Management**: 
+- **Tab Management**:
   - Open: `<leader>to`
   - Close: `<leader>tx`
   - Next/Previous: `<leader>tn`, `<leader>tp`
 - **Toggle Line Wrapping**: `<leader>lw`
-- **Indenting**: Stay in indent mode: `<`, `>`
 - **Pasting**: Keep last yanked when pasting: `p`
-- **Diagnostic Navigation**: 
-  - Previous/Next diagnostic: `[d`, `]d`
-  - Show diagnostics: `<leader>d`
-  - Open diagnostic list: `<leader>q`
 - **Incremental Rename**: `<leader>rn`
 
 ## Miscellaneous
@@ -96,23 +90,13 @@
 ## Plugin-Specific Keybindings
 
 - **Telescope**:
-  - Find files: `<leader>ff`
-  - Live grep: `<leader>fg`
-  - Find buffers: `<leader>fb`
-  - Help tags: `<leader>fh`
+
+  - Find files: `<leader>sf`
+  - Live grep: `<leader>sg`
+  - Help tags: `<leader>sh`
 
 - **Neotree**:
   - Toggle file explorer: `<leader>e`
-
-- **LazyGit**:
-  - Open LazyGit: `<leader>lg`
-
-## Macro Recording and Playback
-
-- **Start Recording**: `q<char>` (e.g., `qa` for register `a`)
-- **Stop Recording**: `q`
-- **Playback**: `@<char>` (e.g., `@a`)
-- **Repeat Last Macro**: `@@`
 
 ## Search and Replace
 
