@@ -10,8 +10,9 @@ Dotfiles are configuration files for various applications and tools in Unix-like
 
 This repository includes dotfiles for:
 
-- Terminal (e.g., `.alacritty.toml`)
-- Editor (e.g., `.vimrc`, `nvim`)
+- Terminal (e.g., `.alacritty`, `iterm2`)
+- Editor (e.g., `.vimrc`, `neovim`)
+  - **[Neovim Cheatsheet](neovim/nvim_cheat.md)**
 - And more!
 
 ## Customization
