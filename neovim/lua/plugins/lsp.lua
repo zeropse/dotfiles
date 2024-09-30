@@ -114,6 +114,7 @@ return {
         },
       },
       rust_analyzer = {},
+      astro = {},
     }
 
     require('mason').setup()
