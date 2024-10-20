@@ -1,6 +1,3 @@
-# By Josean Martinez
-# Inspired by aura.toml
-
 # Default colors
 [colors.primary]
 background = '#011423'
