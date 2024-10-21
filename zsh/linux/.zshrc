@@ -1,13 +1,16 @@
-# Set Zsh options
-PROMPT='zeropse %1~ %# '
-
 # User configuration
-export EDITOR='vim'
-export VISUAL='vim'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # Set personal aliases
 alias zshconfig="vim ~/.zshrc"
 alias vi='vim'
+alias ls='ls --color=auto' # Enable color output for ls
+alias open='dolphin'
+alias open='dolphin .'
+
+# Customize file and folder colors
+export LS_COLORS="di=34:fi=37:ln=36:pi=33:so=35:bd=33:cd=33:or=31:mi=31:ex=32"
 
 # Custom paths
 
@@ -22,6 +25,11 @@ setopt hist_ignore_space
 setopt hist_find_no_dups
 setopt append_history
 setopt extended_history
+setopt emacs
+setopt histignoredups
+setopt no_beep
+setopt interactive_comments
+
 
 # Command-line history searching
 bindkey '^[[A' history-search-backward
@@ -33,4 +41,8 @@ source /home/zeropse/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Starship
 eval "$(starship init zsh)"
-export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+export STARSHIP_CONFIG="/.config/starship/starship.toml"
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
