@@ -7,6 +7,7 @@ export VISUAL='nvim'
 
 # Set personal aliases
 alias zshconfig="nvim ~/.zshrc"
+alias brewup="~/.scripts/brew-mega-upgrade.sh"
 
 # Custom paths
 export PATH="/Applications/XAMPP/bin:$PATH"
