@@ -2,11 +2,11 @@
 PROMPT='zeropse %1~ %# '
 
 # User configuration
-export EDITOR='vim'
-export VISUAL='vim'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 # Set personal aliases
-alias zshconfig="vim ~/.zshrc"
+alias zshconfig="nvim ~/.zshrc"
 
 # Custom paths
 export PATH="/Applications/XAMPP/bin:$PATH"
