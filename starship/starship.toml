@@ -13,6 +13,7 @@ $fill\
 $python\
 $lua\
 $nodejs\
+$golang\
 $rust\
 $package\
 $aws\
@@ -33,7 +34,7 @@ truncate_to_repo = false
 # Git branch module
 [git_branch]
 style = "fg:green"
-symbol = " "
+symbol = " "
 format = "[on](white) [$symbol$branch ]($style)"
 
 # Git status module
@@ -45,44 +46,52 @@ format = "([$all_status$ahead_behind]($style) )"
 [fill]
 symbol = " "
 
+# Python module
 [python]
 style = "teal"
-symbol = " "
-format = "[${symbol}${pyenv_prefix}(${version} )(${virtualenv} )]($style)"
+symbol = "🐍 "
+format = "[${symbol} ${pyenv_prefix}(${version} )(${virtualenv} )]($style)"
 pyenv_version_name = true
 pyenv_prefix = ""
 
 # Lua module
 [lua]
-symbol = " "
+style = "purple"
+symbol = "🌙 "
+format = "[$symbol]($style)"
 
 # Node.js module
 [nodejs]
 style = "blue"
 symbol = " "
+format = "[$symbol ${version}]($style)"
 
 # Go module
 [golang]
 style = "blue"
-symbol = " "
+symbol = "🐹 "
+format = "[$symbol ${version}]($style)"
 
 # Rust module
 [rust]
 style = "orange"
-symbol = " "
+symbol = "🦀 "
+format = "[$symbol ${version}]($style)"
 
 # Package module
 [package]
-symbol = "󰏗 "
+symbol = "📦 "
+format = "[$symbol ${version}]($style)"
 
+# AWS module
 [aws]
-symbol = " "
+symbol = "🅰 "
 style = "yellow"
-format = "[$symbol($profile )[$duration] ]($style)"
+format = "[$symbol ($profile )[$duration]]($style)"
 
 # Docker module
 [docker_context]
-symbol = " "
+symbol = "🐳 "
 style = "fg:#06969A"
 format = "[$symbol]($style) $path"
 detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile"]
@@ -90,7 +99,7 @@ detect_extensions = ["Dockerfile"]
 
 # Jobs module
 [jobs]
-symbol = " "
+symbol = "✦ "
 style = "red"
 number_threshold = 1
 format = "[$symbol]($style)"
