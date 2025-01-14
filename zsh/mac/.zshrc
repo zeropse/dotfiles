@@ -10,8 +10,6 @@ alias zshconfig="nvim ~/.zshrc"
 alias brewup="~/.scripts/brew-mega-upgrade.sh"
 
 # Custom paths
-export PATH="/Applications/XAMPP/bin:$PATH"
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="/opt/homebrew/bin/:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
@@ -34,6 +32,9 @@ bindkey '^[[B' history-search-forward
 # Zsh Plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Disable last-login time
+touch ~/.hushlogin
 
 # Starship
 eval "$(starship init zsh)"
