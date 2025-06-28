@@ -1,19 +1,13 @@
 #!/bin/bash
 
 # Homebrew Upgrade Script
-# This script provides comprehensive Homebrew system maintenance with:
-# - Modular architecture for better maintainability
-# - Enhanced error handling and logging
-# - Dry-run capability and flexible configuration
-# - Cross-platform support (Intel/Apple Silicon)
-# - Beautiful progress reporting and summaries
 
 set -euo pipefail  # Exit on error, undefined variables, and pipe failures
 
 # Get script directory and set global variables
 # Resolve symlinks to get the actual script location (cross-platform)
 get_script_dir() {
-    local source="${BASH_SOURCE[0]}"
+    local source="${BASH_SOURCE[0]:-$0}"
     while [[ -L "$source" ]]; do
         local dir="$(cd -P "$(dirname "$source")" && pwd)"
         source="$(readlink "$source")"
