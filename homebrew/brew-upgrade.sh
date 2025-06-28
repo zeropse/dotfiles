@@ -11,7 +11,17 @@
 set -euo pipefail  # Exit on error, undefined variables, and pipe failures
 
 # Get script directory and set global variables
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Resolve symlinks to get the actual script location (cross-platform)
+get_script_dir() {
+    local source="${BASH_SOURCE[0]}"
+    while [[ -L "$source" ]]; do
+        local dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+        [[ $source != /* ]] && source="$dir/$source"
+    done
+    cd -P "$(dirname "$source")" && pwd
+}
+readonly SCRIPT_DIR="$(get_script_dir)"
 readonly SCRIPT_NAME="$(basename "$0")"
 
 # Source all required modules
