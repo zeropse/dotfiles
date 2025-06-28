@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Configuration
 readonly TOOL_NAME="brew-upgrade"
-readonly REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO"  # Update this with your actual repo
+readonly REPO_URL="https://github.com/zeropse/dotfiles" 
 readonly INSTALL_DIR="$HOME/.scripts/homebrew-upgrade"
 readonly SYMLINK_PATH="$HOME/.scripts/brew-upgrade"
 
