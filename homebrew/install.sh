@@ -89,7 +89,7 @@ create_install_dir() {
 
 # Install from local files (for development/local distribution)
 install_local() {
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
     
     log_info "Installing from local files..."
     
@@ -253,7 +253,7 @@ main() {
     create_install_dir
     
     # Try local installation first (for development), fall back to remote
-    if [[ -f "$(dirname "${BASH_SOURCE[0]}")/brew-upgrade.sh" ]]; then
+    if [[ -f "$(dirname "${BASH_SOURCE[0]:-$0}")/brew-upgrade.sh" ]]; then
         install_local
     else
         install_remote
