@@ -69,19 +69,31 @@ check_prerequisites() {
 
 # Create installation directory
 create_install_dir() {
-    log_info "Creating installation directory..."
+    log_info "Preparing installation directory..."
     
-    # Remove existing installation if it exists
-    if [[ -d "$INSTALL_DIR" ]]; then
-        log_warning "Existing installation found. Removing..."
-        rm -rf "$INSTALL_DIR"
+    # Check if .scripts directory exists
+    local scripts_dir="$(dirname "$INSTALL_DIR")"
+    if [[ -d "$scripts_dir" ]]; then
+        log_info ".scripts directory already exists, using it"
+    else
+        log_info "Creating .scripts directory"
+        mkdir -p "$scripts_dir"
     fi
     
-    # Create directory structure
+    # Handle existing installation
+    if [[ -d "$INSTALL_DIR" ]]; then
+        log_warning "Existing installation found. Updating..."
+        # Keep the directory but remove old files to ensure clean update
+        rm -rf "$INSTALL_DIR"/{brew-upgrade.sh,lib}
+    else
+        log_info "Creating new installation directory"
+    fi
+    
+    # Ensure installation directory exists
     mkdir -p "$INSTALL_DIR"
     mkdir -p "$(dirname "$SYMLINK_PATH")"
     
-    log_success "Installation directory created: $INSTALL_DIR"
+    log_success "Installation directory ready: $INSTALL_DIR"
 }
 
 # Install from local files (for development/local distribution)
@@ -103,7 +115,7 @@ install_local() {
         exit 1
     fi
     
-    log_success "Local files copied successfully"
+    log_success "Local files installed successfully"
 }
 
 # Install from remote repository (for public distribution)
@@ -181,19 +193,18 @@ update_path() {
 
 # Show installation summary
 show_summary() {
+    local action="Installation"
+    if [[ -L "$SYMLINK_PATH" ]] && [[ -x "$INSTALL_DIR/brew-upgrade.sh" ]]; then
+        action="Update"
+    fi
+    
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                    Installation Complete!                    ║"
+    echo "║                    $action Complete!                    ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo
     echo "📁 Installation directory: $INSTALL_DIR"
     echo "🔗 Command shortcut: $SYMLINK_PATH"
-    echo
-    echo "🚀 Usage:"
-    echo "  brew-upgrade              # Run with default settings"
-    echo "  brew-upgrade --help       # Show all options"
-    echo "  brew-upgrade --dry-run    # Preview what would be done"
-    echo "  brew-upgrade --skip-casks # Skip cask upgrades"
     echo
     echo "📚 For more information, run: brew-upgrade --help"
     echo
@@ -201,21 +212,74 @@ show_summary() {
 
 # Uninstall function
 uninstall() {
+    echo
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║              Homebrew Upgrade Tool Uninstaller               ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo
+    
     log_info "Uninstalling Homebrew Upgrade Tool..."
+    
+    local items_removed=0
     
     # Remove installation directory
     if [[ -d "$INSTALL_DIR" ]]; then
+        log_info "Removing installation directory: $INSTALL_DIR"
         rm -rf "$INSTALL_DIR"
         log_success "Removed installation directory"
+        ((items_removed++))
+    else
+        log_info "Installation directory not found (already removed)"
     fi
     
     # Remove symlink
     if [[ -L "$SYMLINK_PATH" ]]; then
+        log_info "Removing command shortcut: $SYMLINK_PATH"
         rm -f "$SYMLINK_PATH"
         log_success "Removed command shortcut"
+        ((items_removed++))
+    elif [[ -f "$SYMLINK_PATH" ]]; then
+        log_info "Removing file: $SYMLINK_PATH"
+        rm -f "$SYMLINK_PATH"
+        log_success "Removed file"
+        ((items_removed++))
+    else
+        log_info "Command shortcut not found (already removed)"
     fi
     
-    log_success "Uninstallation complete"
+    # Check if .scripts directory is empty and offer to remove it
+    local scripts_dir="$(dirname "$INSTALL_DIR")"
+    if [[ -d "$scripts_dir" ]] && [[ -z "$(ls -A "$scripts_dir" 2>/dev/null)" ]]; then
+        log_info "The .scripts directory is empty"
+        echo "Would you like to remove the empty .scripts directory? (y/N)"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            rmdir "$scripts_dir"
+            log_success "Removed empty .scripts directory"
+            ((items_removed++))
+        else
+            log_info "Keeping .scripts directory"
+        fi
+    elif [[ -d "$scripts_dir" ]]; then
+        log_info "The .scripts directory contains other files, keeping it"
+    fi
+    
+    echo
+    if [[ $items_removed -gt 0 ]]; then
+        echo "╔══════════════════════════════════════════════════════════════╗"
+        echo "║                  Uninstallation Complete!                    ║"
+        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo
+        log_success "Homebrew Upgrade Tool has been completely removed"
+        echo "Thank you for using the Homebrew Upgrade Tool! 👋"
+    else
+        echo "╔══════════════════════════════════════════════════════════════╗"
+        echo "║                 Nothing to Uninstall                         ║"
+        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo
+        log_info "No installation found - nothing to remove"
+    fi
+    
     exit 0
 }
 

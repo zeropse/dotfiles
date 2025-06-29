@@ -28,6 +28,9 @@ show_usage() {
     echo
     echo "    --force-doctor      Continue even if brew doctor fails"
     echo "                        Example: $SCRIPT_NAME --force-doctor"
+    echo
+    echo "    --uninstall         Remove the Homebrew Upgrade Tool from your system"
+    echo "                        Example: $SCRIPT_NAME --uninstall"
 }
 
 # Parse command line arguments
@@ -57,6 +60,9 @@ parse_arguments() {
             -h|--help)
                 show_usage
                 exit $EXIT_SUCCESS
+                ;;
+            --uninstall)
+                uninstall_self
                 ;;
             *)
                 log_error "Unknown option: $1"
