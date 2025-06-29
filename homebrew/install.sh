@@ -39,10 +39,7 @@ log_error() {
 show_banner() {
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║              Homebrew Upgrade Tool Installer                ║"
-    echo "║                                                              ║"
-    echo "║  This will install a comprehensive Homebrew maintenance     ║"
-    echo "║  tool with modular architecture and enhanced features.      ║"
+    echo "║              Homebrew Upgrade Tool Installer                 ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo
 }
@@ -186,7 +183,7 @@ update_path() {
 show_summary() {
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                    Installation Complete!                   ║"
+    echo "║                    Installation Complete!                    ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo
     echo "📁 Installation directory: $INSTALL_DIR"
