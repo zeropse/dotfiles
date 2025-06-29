@@ -7,7 +7,6 @@ export VISUAL='nvim'
 
 # Set personal aliases
 alias zshconfig="nvim ~/.zshrc"
-alias brewup="~/.scripts/brew-mega-upgrade.sh"
 
 # Custom paths
 export PATH="/opt/homebrew/bin/:$PATH"
@@ -15,8 +14,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # History setup
 HISTFILE=$HOME/.zhistory
-SAVEHIST=1000
-HISTSIZE=999
+SAVEHIST=10000
+HISTSIZE=10000
 setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
