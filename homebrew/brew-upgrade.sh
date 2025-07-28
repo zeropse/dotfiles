@@ -28,6 +28,9 @@ source "$SCRIPT_DIR/lib/summary.sh"
 
 # Main execution function
 main() {
+    # Parse command line arguments first (before logging)
+    parse_arguments "$@"
+    
     # Initialize logging
     init_log
     
@@ -36,9 +39,6 @@ main() {
     
     # Validate Homebrew installation
     check_homebrew
-    
-    # Parse command line arguments
-    parse_arguments "$@"
     
     # Validate configuration and show settings
     validate_and_show_config
