@@ -129,7 +129,7 @@ update_self() {
     fi
     
     # Backup current installation
-    local backup_dir="${install_dir}.backup.$(date +%Y%m%d_%H%M%S)"
+    local backup_dir="${install_dir}.backup.$(date +%d-%m-%Y)"
     echo "ℹ️  Creating backup: $backup_dir"
     cp -r "$install_dir" "$backup_dir"
     echo "✅ Created backup"
