@@ -224,11 +224,8 @@ confirm_installation() {
     
     # Check if we're in a pipe (non-interactive mode)
     if [[ ! -t 0 ]]; then
-        log_info "Running in non-interactive mode - proceeding with installation"
-        log_info "To cancel, press Ctrl+C within 3 seconds..."
-        sleep 3
+        log_info "Remote installation detected - starting automatically..."
         echo
-        log_success "Proceeding with installation..."
         return 0
     fi
     
