@@ -115,7 +115,13 @@ install_remote() {
 
 # Install from local files (for development)
 install_local() {
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # Use fallback for piped execution where BASH_SOURCE might not be available
+    local script_dir=""
+    if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+        script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    else
+        script_dir="$(pwd)"
+    fi
     
     log_info "Installing from local files..."
     
