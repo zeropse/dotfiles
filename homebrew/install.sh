@@ -200,7 +200,7 @@ show_summary() {
     
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                    $action Complete!                    ║"
+    echo "║                    $action Complete!                         ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo
     echo "📁 Installation directory: $INSTALL_DIR"
