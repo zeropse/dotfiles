@@ -222,6 +222,16 @@ confirm_installation() {
         log_warning "Existing installation found - this will update it"
     fi
     
+    # Check if we're in a pipe (non-interactive mode)
+    if [[ ! -t 0 ]]; then
+        log_info "Running in non-interactive mode - proceeding with installation"
+        log_info "To cancel, press Ctrl+C within 3 seconds..."
+        sleep 3
+        echo
+        log_success "Proceeding with installation..."
+        return 0
+    fi
+    
     echo -n "Do you want to continue? (y/N): "
     read -r response
     
@@ -258,7 +268,18 @@ main() {
             echo "Related commands:"
             echo "  brew-upgrade --update    Update the tool after installation"
             echo "  brew-upgrade --uninstall Remove the tool after installation"
+            echo
+            echo "Examples:"
+            echo "  $0                              # Interactive installation"
+            echo "  curl -sSL <url> | bash          # Auto-install when piped"
             exit 0
+            ;;
+        *)
+            if [[ -n "${1:-}" ]]; then
+                log_error "Unknown option: $1"
+                echo "Use --help for usage information"
+                exit 1
+            fi
             ;;
     esac
     
