@@ -14,11 +14,7 @@ readonly LOG_FILE="${HOME}/.brew-maintenance.log"
 readonly TEMP_DIR=$(mktemp -d)
 
 # Runtime configuration (can be overridden by environment variables or CLI)
-DRY_RUN=${DRY_RUN:-false}
-VERBOSE=${VERBOSE:-false}
-SKIP_CASKS=false
-SKIP_CLEANUP=false
-FORCE_DOCTOR=false
+# No configurable options - tool runs with standard settings
 
 # Colors for output
 readonly RED='\033[0;31m'

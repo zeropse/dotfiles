@@ -50,32 +50,16 @@ main() {
     # Define maintenance steps
     local -a steps=()
     
-    # Add initial cleanup if not skipped
-    if [[ "$SKIP_CLEANUP" != "true" ]]; then
-        steps+=("step_initial_cleanup:Initial Cleanup")
-    fi
-    
     steps+=(
+        "step_initial_cleanup:Initial Cleanup"
         "step_doctor:System Health Check"
         "step_update_homebrew:Update Homebrew"
         "step_check_outdated:Analyze Outdated Packages"
         "step_upgrade_formulae:Upgrade Formulae"
-    )
-    
-    if [[ "$SKIP_CASKS" != "true" ]]; then
-        steps+=("step_upgrade_casks:Upgrade Casks")
-    fi
-    
-    steps+=(
+        "step_upgrade_casks:Upgrade Casks"
         "step_check_dependencies:Check Dependencies"
         "step_autoremove:Remove Unused Dependencies"
-    )
-    
-    if [[ "$SKIP_CLEANUP" != "true" ]]; then
-        steps+=("step_final_cleanup:Final Cleanup")
-    fi
-    
-    steps+=(
+        "step_final_cleanup:Final Cleanup"
         "step_final_doctor:Final Health Check"
     )
     

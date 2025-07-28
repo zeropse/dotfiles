@@ -2,52 +2,6 @@
 
 A comprehensive, modular Homebrew maintenance tool designed for reliable system updates with enhanced error handling, beautiful progress reporting, and professional user experience.
 
-## ✨ Features
-
-### 🔧 **Comprehensive Maintenance**
-
-- **Initial cleanup** - Remove broken symlinks and stale locks
-- **System health checks** - Run `brew doctor` to identify issues
-- **Package updates** - Update Homebrew itself and all formula definitions
-- **Intelligent upgrades** - Update command-line tools, libraries, and GUI apps
-- **Dependency management** - Check and remove unused dependencies
-- **Final cleanup** - Remove old downloads and clear caches
-- **Health verification** - Ensure everything works after maintenance
-
-### 🛡️ **Robust Error Handling**
-
-- **Strict error checking** with `set -euo pipefail`
-- **Graceful cleanup** on script exit or interruption
-- **Individual package handling** with failure isolation
-- **Comprehensive error logging** and reporting
-- **Force options** for continuing despite warnings
-- **Smart recovery** from common issues
-
-### 🎯 **Smart Configuration**
-
-- **Dry-run mode** to preview all changes before execution
-- **Modular architecture** with separated concerns
-- **Flexible options** for skipping specific operations
-- **Verbose logging** with detailed output control
-- **Cross-platform support** (Intel and Apple Silicon)
-- **Environment variable support** for automation
-
-### 🎨 **Beautiful Interface**
-
-- **Colorized output** with clear status indicators
-- **Progress tracking** with step-by-step reporting
-- **Professional banners** and completion summaries
-- **Detailed statistics** and performance metrics
-- **Clean, readable help system**
-- **Modern Unicode symbols** for better visual feedback
-
-### �️ **Self-Management**
-
-- **Built-in uninstaller** - Remove tool cleanly
-- **Smart updates** - Update existing installations
-- **Modular installation** - Preserve user customizations
-- **Clean removal** - Optional cleanup of empty directories
-
 ## 📦 Installation
 
 ### One-Line Install (Recommended)
@@ -87,12 +41,20 @@ cd dotfiles/homebrew
     ├── brew-upgrade.sh         # Main script
     └── lib/                    # Library modules
         ├── cli.sh              # Command-line interface
+        ├── common.sh           # Shared functions and configuration
         ├── config.sh           # Configuration management
         ├── logger.sh           # Logging utilities
         ├── steps.sh            # Maintenance steps
         ├── summary.sh          # Summary generation
         └── utils.sh            # Utility functions
 ```
+
+### Installation Options
+
+The installer supports the following options:
+
+- **Interactive mode** (default): Shows a confirmation prompt with details about what will be installed
+- **Help** (`--help` or `-h`): Shows usage information and exits
 
 ## 🔄 What It Does
 
@@ -103,44 +65,58 @@ The tool performs comprehensive Homebrew maintenance in this order:
 3. **Update Homebrew** - Update Homebrew itself and formula definitions
 4. **Analyze Outdated Packages** - Check what needs updating
 5. **Upgrade Formulae** - Update command-line tools and libraries
-6. **Upgrade Casks** - Update GUI applications (if not skipped)
+6. **Upgrade Casks** - Update GUI applications
 7. **Check Dependencies** - Verify package dependencies
 8. **Remove Unused Dependencies** - Clean up orphaned packages
 9. **Final Cleanup** - Remove old downloads and clear caches
 10. **Final Health Check** - Verify everything is working properly
 
+### **Beautiful Interface**
+
+- **Colorized output** with clear status indicators
+- **Progress tracking** with step-by-step reporting
+- **Professional banners** and completion summaries
+- **Detailed statistics** and performance metrics
+- **Clean, readable help system**
+- **Modern Unicode symbols** for better visual feedback
+
+### **Self-Management**
+
+- **Built-in uninstaller** - Remove tool cleanly
+- **Smart updates** - Update existing installations
+- **Modular installation** - Preserve user customizations
+- **Clean removal** - Optional cleanup of empty directories
+
 ## 🗑️ Uninstallation
 
-### Option 1: Self-Uninstall (Recommended)
+Use the built-in uninstaller:
 
 ```bash
 brew-upgrade --uninstall
 ```
 
-### Option 2: Using the Installer
+This will safely remove the tool from your system with confirmation prompts and:
 
-```bash
-curl -sSL https://raw.githubusercontent.com/zeropse/dotfiles/main/homebrew/install.sh | bash -s -- --uninstall
-```
-
-### Option 3: Manual Removal
-
-```bash
-rm -rf ~/.scripts/homebrew-upgrade
-rm -f ~/.scripts/brew-upgrade
-# Optionally remove .scripts if empty
-rmdir ~/.scripts 2>/dev/null
-```
+- Remove the installation directory
+- Remove the command shortcut
+- Optionally remove empty .scripts directory (with confirmation)
+- Provide completion message
 
 ## 🔄 Updates
 
-To update to the latest version, simply run the installer again:
+Use the built-in updater:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/zeropse/dotfiles/main/homebrew/install.sh | bash
+brew-upgrade --update
 ```
 
-The installer automatically detects and updates existing installations while preserving your configuration.
+This will download and install the latest version while preserving your configuration and:
+
+- Create automatic backup of current installation
+- Download latest version from repository
+- Update all tool files
+- Verify installation integrity
+- Show backup location for safety
 
 ## 📋 Requirements
 
@@ -148,34 +124,6 @@ The installer automatically detects and updates existing installations while pre
 - **Homebrew** installed and configured
 - **Bash 4.0+** (included in modern macOS)
 - **Standard Unix tools** (curl, tar, mkdir)
-
-## 🔧 Configuration
-
-### Environment Variables
-
-```bash
-# Enable dry-run mode by default
-export BREW_UPGRADE_DRY_RUN=true
-
-# Skip casks by default
-export BREW_UPGRADE_SKIP_CASKS=true
-
-# Enable verbose logging
-export BREW_UPGRADE_VERBOSE=true
-```
-
-### Automation
-
-```bash
-# Add to crontab for weekly maintenance
-0 9 * * 1 /Users/$(whoami)/.scripts/brew-upgrade --skip-casks
-
-# Use in scripts
-if brew-upgrade --dry-run; then
-    echo "Maintenance would succeed"
-    brew-upgrade
-fi
-```
 
 ## 🐛 Troubleshooting
 
@@ -213,7 +161,7 @@ fi
 **brew doctor reports issues:**
 
 - Review the specific warnings/errors
-- Use `--force-doctor` to continue despite issues
+- The tool will continue despite issues automatically
 - Address underlying problems when possible
 
 ### Getting Help
@@ -225,10 +173,6 @@ When reporting issues, please include:
 - **Full command used** and options
 - **Log file contents** from the tool
 - **Error messages** (copy exactly)
-
-1. Run `brew-upgrade --help` for usage information
-2. Check the logs in the installation directory
-3. Open an issue on GitHub with error details
 
 ## 🏗️ Architecture
 
@@ -248,7 +192,7 @@ The tool uses a clean modular architecture:
 
 - **Fails fast** on critical errors (Homebrew missing, update failures)
 - **Continues gracefully** on non-critical issues (individual package failures)
-- **Provides options** to force continuation (`--force-doctor`)
+- **Automatic handling** of doctor warnings and cleanup issues
 - **Logs everything** for post-execution review
 - **Clean exit** with proper resource cleanup
 

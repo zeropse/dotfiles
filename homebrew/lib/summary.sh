@@ -58,12 +58,7 @@ show_summary() {
         log_info "  • Homebrew version: $HOMEBREW_VERSION"
         log_info "  • Installation path: $BREW_PREFIX"
         log_info "  • Duration: ${minutes}m ${seconds}s"
-        
-        if [[ "$DRY_RUN" == "true" ]]; then
-            log_info "  • Mode: 🔍 DRY RUN (no changes made)"
-        else
-            log_info "  • Mode: ✅ FULL MAINTENANCE"
-        fi
+        log_info "  • Mode: ✅ FULL MAINTENANCE"
     fi
 
     echo

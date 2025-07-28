@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Homebrew Upgrade - Maintenance Steps
-# Individual maintenance step functions
+# Individual maintenance step implementations
 
 # Source dependencies
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
@@ -30,14 +30,9 @@ step_doctor() {
         log_success "System is healthy!"
         return 0
     else
-        if [[ "$FORCE_DOCTOR" == "true" ]]; then
-            log_warning "System health issues detected, but continuing due to --force-doctor"
-            return 0
-        else
-            log_error "System health issues detected. Use --force-doctor to continue anyway."
-            log_info "Run 'brew doctor' manually to see specific issues."
-            exit $EXIT_DOCTOR_FAILED
-        fi
+        log_warning "System health issues detected, but continuing with maintenance"
+        log_info "Run 'brew doctor' manually to see specific issues"
+        return 1
     fi
 }
 
@@ -75,21 +70,17 @@ step_check_outdated() {
     fi
     
     # Check outdated casks
-    if [[ "$SKIP_CASKS" != "true" ]]; then
-        if outdated_casks=$(brew outdated --cask 2>/dev/null); then
-            if [[ -n "$outdated_casks" ]]; then
-                local count
-                count=$(echo "$outdated_casks" | wc -l | tr -d ' ')
-                log_info "Found $count outdated casks:"
-                echo "$outdated_casks" | while read -r cask; do
-                    [[ -n "$cask" ]] && log_info "  • $cask"
-                done
-            else
-                log_success "All casks are up to date!"
-            fi
+    if outdated_casks=$(brew outdated --cask 2>/dev/null); then
+        if [[ -n "$outdated_casks" ]]; then
+            local count
+            count=$(echo "$outdated_casks" | wc -l | tr -d ' ')
+            log_info "Found $count outdated casks:"
+            echo "$outdated_casks" | while read -r cask; do
+                [[ -n "$cask" ]] && log_info "  • $cask"
+            done
+        else
+            log_success "All casks are up to date!"
         fi
-    else
-        log_info "Skipping cask analysis (--skip-casks enabled)"
     fi
 }
 
@@ -204,7 +195,7 @@ step_final_cleanup() {
     fi
 }
 
-# Step 11: Final health check
+# Step 10: Final health check
 step_final_doctor() {
     log_step "10" "Final system health check"
     

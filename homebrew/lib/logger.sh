@@ -42,11 +42,7 @@ log_step() {
 
 log_debug() {
     local msg="$1"
-    if [[ "$VERBOSE" == "true" ]]; then
-        echo -e "${BLUE}[DEBUG]${NC} $msg" | tee -a "$LOG_FILE"
-    else
-        echo "[DEBUG] $msg" >> "$LOG_FILE"
-    fi
+    echo "[DEBUG] $msg" >> "$LOG_FILE"
 }
 
 # Enhanced spinner with step description
