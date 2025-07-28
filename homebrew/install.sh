@@ -286,7 +286,14 @@ main() {
     create_install_dir
     
     # Check if we're running from a local development directory
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # Use fallback for piped execution where BASH_SOURCE might not be available
+    local script_dir=""
+    if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+        script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    else
+        script_dir="$(pwd)"
+    fi
+    
     if [[ -f "$script_dir/brew-upgrade.sh" ]]; then
         install_local
     else
