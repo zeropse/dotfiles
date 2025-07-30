@@ -2,10 +2,6 @@
 
 Welcome to my personal collection of customized dotfiles! These configuration files are tailored to enhance my development environment and improve my productivity. Feel free to explore, use, or adapt them for your own needs!
 
-## What are Dotfiles?
-
-Dotfiles are configuration files for various applications and tools in Unix-like operating systems. They are typically hidden files (starting with a dot) that store user preferences and settings.
-
 ## Contents
 
 This repository includes dotfiles for:
@@ -13,6 +9,8 @@ This repository includes dotfiles for:
 - Terminal (e.g., `Ghostty`)
 - Editor (e.g., `neovim`)
   - **[Neovim Cheatsheet](neovim/nvim_cheat.md)**
+- Homebrew
+  - **[Homebrew Upgrade Tool ](homebrew/README.md)**
 - And more!
 
 ## Customization
