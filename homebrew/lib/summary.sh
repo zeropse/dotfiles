@@ -59,6 +59,11 @@ show_summary() {
         log_info "  • Installation path: $BREW_PREFIX"
         log_info "  • Duration: ${minutes}m ${seconds}s"
         log_info "  • Mode: ✅ FULL MAINTENANCE"
+
+        # Notifiy completion
+        if [[ "${NOTIFICATIONS:-true}" == "true" ]] && declare -f notify_success > /dev/null; then
+            notify_success "Homebrew maintenance completed in ${minutes}m ${seconds}s"
+        fi
     fi
 
     echo

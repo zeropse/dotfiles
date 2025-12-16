@@ -44,6 +44,7 @@ cd dotfiles/homebrew
         ├── common.sh           # Shared functions and configuration
         ├── config.sh           # Configuration management
         ├── logger.sh           # Logging utilities
+        ├── notifications.sh    # System notifications
         ├── steps.sh            # Maintenance steps
         ├── summary.sh          # Summary generation
         └── utils.sh            # Utility functions
@@ -58,18 +59,18 @@ The installer supports the following options:
 
 ## 🔄 What It Does
 
-The tool performs comprehensive Homebrew maintenance in this order:
+The tool performs comprehensive Homebrew maintenance:
 
 1. **Initial Cleanup** - Remove broken symlinks and stale locks
-2. **System Health Check** - Run `brew doctor` to identify issues
-3. **Update Homebrew** - Update Homebrew itself and formula definitions
+2. **System Health Check** - Run `brew doctor`
+3. **Update Homebrew** - Update core and formulae
 4. **Analyze Outdated Packages** - Check what needs updating
-5. **Upgrade Formulae** - Update command-line tools and libraries
-6. **Upgrade Casks** - Update GUI applications
-7. **Check Dependencies** - Verify package dependencies
-8. **Remove Unused Dependencies** - Clean up orphaned packages
-9. **Final Cleanup** - Remove old downloads and clear caches
-10. **Final Health Check** - Verify everything is working properly
+5. **Upgrade Formulae** - Update tools/libraries
+6. **Upgrade Casks** - Update GUI apps
+7. **Check Dependencies** - Verify integrity
+8. **Remove Unused Dependencies** - Autoremove orphans
+9. **Final Cleanup** - Clear caches
+10. **Notifications** - Native macOS alerts on completion/error
 
 ### **Beautiful Interface**
 

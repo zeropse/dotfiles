@@ -21,6 +21,7 @@ readonly SCRIPT_NAME="$(basename "$0")"
 # Source all required modules
 source "$SCRIPT_DIR/lib/config.sh"
 source "$SCRIPT_DIR/lib/logger.sh"
+source "$SCRIPT_DIR/lib/notifications.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 source "$SCRIPT_DIR/lib/cli.sh"
 source "$SCRIPT_DIR/lib/steps.sh"
@@ -54,6 +55,9 @@ main() {
         "step_initial_cleanup:Initial Cleanup"
         "step_doctor:System Health Check"
         "step_update_homebrew:Update Homebrew"
+    )
+
+    steps+=(
         "step_check_outdated:Analyze Outdated Packages"
         "step_upgrade_formulae:Upgrade Formulae"
         "step_upgrade_casks:Upgrade Casks"

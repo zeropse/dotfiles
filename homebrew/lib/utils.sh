@@ -9,9 +9,20 @@ source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 # Cleanup function for trap
 cleanup() {
     local exit_code=$?
+    trap - EXIT INT TERM # Disable traps to prevent double execution
+    
     [[ -d "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"
+    
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Script exited with error code $exit_code"
+        if [[ "${NOTIFICATIONS:-true}" == "true" ]] && declare -f notify_error > /dev/null; then
+            if [[ $exit_code -eq 130 ]]; then
+                log_error "Script interrupted by user"
+                notify_error "Maintenance cancelled by user"
+            else
+                log_error "Script exited with error code $exit_code"
+                notify_error "Script failed with error code $exit_code"
+            fi
+        fi
     fi
     exit $exit_code
 }
@@ -37,6 +48,12 @@ check_homebrew() {
 run_command() {
     local cmd="$1"
     local description="$2"
+    
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "[DRY RUN] Would execute: $cmd"
+        sleep 0.5 # Simulate some work
+        return 0
+    fi
     
     eval "$cmd" &
     local pid=$!
