@@ -257,6 +257,20 @@ uninstall_self() {
         echo "ℹ️  Command shortcut not found (already removed)"
     fi
     
+    # Check for and remove backups
+    local base_name="$(basename "$install_dir")"
+    local backups
+    backups=$(find "$scripts_dir" -maxdepth 1 -name "${base_name}.backup.*" 2>/dev/null)
+    
+    if [[ -n "$backups" ]]; then
+        echo "ℹ️  Removing backup directories..."
+        echo "$backups" | while read -r backup; do
+            rm -rf "$backup"
+            echo "✅ Removed backup: $backup"
+        done
+        ((items_removed++))
+    fi
+    
     # Remove installation directory (this will remove the running script!)
     if [[ -d "$install_dir" ]]; then
         echo "ℹ️  Removing installation directory: $install_dir"
