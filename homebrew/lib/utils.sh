@@ -282,29 +282,6 @@ uninstall_self() {
         echo "ℹ️  Installation directory not found (already removed)"
     fi
     
-    # Check if .scripts directory is empty and offer to remove it
-    if [[ -d "$scripts_dir" ]] && [[ "$scripts_dir" == "$HOME/.scripts" ]]; then
-        # Count remaining items (excluding the directory we're about to remove)
-        local remaining_items
-        remaining_items=$(find "$scripts_dir" -mindepth 1 -maxdepth 1 ! -path "$install_dir" 2>/dev/null | wc -l)
-        
-        if [[ "$remaining_items" -eq 0 ]]; then
-            echo "ℹ️  The .scripts directory will be empty after removal"
-            echo "Would you like to remove the empty .scripts directory? (y/N)"
-            read -r response
-            if [[ "$response" =~ ^[Yy]$ ]]; then
-                # Schedule removal of scripts directory too
-                (sleep 2 && rmdir "$scripts_dir" 2>/dev/null) &
-                echo "✅ Scheduled empty .scripts directory removal"
-                ((items_removed++))
-            else
-                echo "ℹ️  Keeping .scripts directory"
-            fi
-        else
-            echo "ℹ️  The .scripts directory contains other files, keeping it"
-        fi
-    fi
-    
     echo
     if [[ $items_removed -gt 0 ]]; then
         echo "╔══════════════════════════════════════════════════════════════╗"
