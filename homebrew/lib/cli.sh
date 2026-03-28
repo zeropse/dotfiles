@@ -16,7 +16,6 @@ show_usage() {
     echo "                        Example: $SCRIPT_NAME --help"
     echo
     echo "    --dry-run           Simulate actions without making changes"
-    echo "    --no-notify         Disable system notifications"
     echo
     echo "    --update            Update the Homebrew Upgrade Tool to the latest version"
     echo "                        Example: $SCRIPT_NAME --update"
@@ -35,9 +34,6 @@ parse_arguments() {
                 ;;
             --dry-run)
                 DRY_RUN="true"
-                ;;
-            --no-notify)
-                NOTIFICATIONS="false"
                 ;;
             --uninstall)
                 uninstall_self

@@ -10,6 +10,9 @@ A comprehensive, modular Homebrew maintenance tool designed for reliable system 
 curl -sSL https://raw.githubusercontent.com/zeropse/dotfiles/main/homebrew/install.sh | bash
 ```
 
+Then reload the terminal.
+
+
 ### Manual Installation
 
 1. Download the installer:
@@ -44,7 +47,6 @@ cd dotfiles/homebrew
         ├── common.sh           # Shared functions and configuration
         ├── config.sh           # Configuration management
         ├── logger.sh           # Logging utilities
-        ├── notifications.sh    # System notifications
         ├── steps.sh            # Maintenance steps
         ├── summary.sh          # Summary generation
         └── utils.sh            # Utility functions
@@ -70,7 +72,6 @@ The tool performs comprehensive Homebrew maintenance:
 7. **Check Dependencies** - Verify integrity
 8. **Remove Unused Dependencies** - Autoremove orphans
 9. **Final Cleanup** - Clear caches
-10. **Notifications** - Native macOS alerts on completion/error
 
 ### **Beautiful Interface**
 

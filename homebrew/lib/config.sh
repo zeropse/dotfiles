@@ -17,7 +17,6 @@ readonly TEMP_DIR=$(mktemp -d)
 
 # Configurable options with defaults
 DRY_RUN="${DRY_RUN:-false}"
-NOTIFICATIONS="${NOTIFICATIONS:-true}"
 SKIP_DOCTOR="${SKIP_DOCTOR:-false}"
 
 # Colors for output

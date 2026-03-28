@@ -11,6 +11,9 @@ This repository includes dotfiles for:
   - **[Neovim Cheatsheet](neovim/nvim_cheat.md)**
 - Homebrew
   - **[Homebrew Upgrade Tool ](homebrew/README.md)**
+- Starship
+  - **[Starship Config](starship/starship.toml)**
+
 - And more!
 
 ## Customization

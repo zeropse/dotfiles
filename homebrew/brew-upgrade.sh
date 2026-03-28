@@ -21,7 +21,6 @@ readonly SCRIPT_NAME="$(basename "$0")"
 # Source all required modules
 source "$SCRIPT_DIR/lib/config.sh"
 source "$SCRIPT_DIR/lib/logger.sh"
-source "$SCRIPT_DIR/lib/notifications.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 source "$SCRIPT_DIR/lib/cli.sh"
 source "$SCRIPT_DIR/lib/steps.sh"

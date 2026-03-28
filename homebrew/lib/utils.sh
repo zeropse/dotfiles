@@ -14,14 +14,10 @@ cleanup() {
     [[ -d "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"
     
     if [[ $exit_code -ne 0 ]]; then
-        if [[ "${NOTIFICATIONS:-true}" == "true" ]] && declare -f notify_error > /dev/null; then
-            if [[ $exit_code -eq 130 ]]; then
-                log_error "Script interrupted by user"
-                notify_error "Maintenance cancelled by user"
-            else
-                log_error "Script exited with error code $exit_code"
-                notify_error "Script failed with error code $exit_code"
-            fi
+        if [[ $exit_code -eq 130 ]]; then
+            log_error "Script interrupted by user"
+        else
+            log_error "Script exited with error code $exit_code"
         fi
     fi
     exit $exit_code

@@ -1,6 +1,3 @@
-# Set Zsh options
-PROMPT='zeropse %1~ %# '
-
 # User configuration
 export EDITOR='nvim'
 export VISUAL='nvim'
@@ -9,11 +6,11 @@ export VISUAL='nvim'
 alias zshconfig="nvim ~/.zshrc"
 
 # Custom paths
-export PATH="/opt/homebrew/bin/:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/opt/homebrew/bin/:$PATH" # For Homebrew
+# export PATH="$HOME/.cargo/bin:$PATH" (FOR RUST DEVELOPMENT) 
 
 # History setup
-HISTFILE=$HOME/.zhistory
+HISTFILE=$HOME/.zsh_history
 SAVEHIST=10000
 HISTSIZE=10000
 setopt share_history
@@ -23,6 +20,8 @@ setopt hist_ignore_space
 setopt hist_find_no_dups
 setopt append_history
 setopt extended_history
+setopt inc_append_history
+setopt hist_reduce_blanks
 
 # Command-line history searching
 bindkey '^[[A' history-search-backward
@@ -33,8 +32,10 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Disable last-login time
-touch ~/.hushlogin
+[[ -f ~/.hushlogin ]] || touch ~/.hushlogin
 
 # Starship
 eval "$(starship init zsh)"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+# Add .scripts to PATH for Homebrew Upgrade Tool
+export PATH="/Users/zeropse/.scripts:$PATH"
