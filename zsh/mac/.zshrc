@@ -37,5 +37,3 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Starship
 eval "$(starship init zsh)"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-# Add .scripts to PATH for Homebrew Upgrade Tool
-export PATH="/Users/zeropse/.scripts:$PATH"
