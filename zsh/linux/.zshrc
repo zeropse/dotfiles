@@ -15,7 +15,7 @@ export LS_COLORS="di=34:fi=37:ln=36:pi=33:so=35:bd=33:cd=33:or=31:mi=31:ex=32"
 # Custom paths
 
 # History setup
-HISTFILE=$HOME/.zhistory
+HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000
 HISTSIZE=999
 setopt share_history
