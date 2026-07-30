@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal configuration files, shell configurations, editor settings, terminal configuration, and system utilities for macOS and Linux.
+Personal configuration files, shell configurations, editor settings, terminal configuration, and system utilities for macOS.
 
 This repository contains configurations for the tools and environments I use for development and daily work.
 
@@ -14,7 +14,7 @@ This repository contains configurations for the tools and environments I use for
 | [`neovim/`](neovim/)       | Neovim configuration and cheatsheet        |
 | [`starship/`](starship/)   | Starship shell prompt configuration        |
 | [`vim/`](vim/)             | Vim configuration files                    |
-| [`zsh/`](zsh/)             | Zsh configurations for macOS and Linux     |
+| [`zsh/`](zsh/)             | Zsh configurations for macOS               |
 
 ## Components
 
@@ -26,7 +26,7 @@ See the [Homebrew Upgrade Tool documentation](homebrew/README.md) for installati
 
 ### Zsh
 
-Shell configurations for macOS and Linux. The configurations include shell options, aliases, environment settings, functions, and other command-line customizations.
+Shell configurations for macOS. The configurations include shell options, aliases, environment settings, functions, and other command-line customizations.
 
 ### Starship
 

@@ -10,7 +10,6 @@ endif
 " Options
 " ========================================
 
-set encoding=UTF-8
 set spelllang=en_us,de_de,es_es
 set nohlsearch " Disable highlight on search
 set number " Enable line numbers
@@ -29,7 +28,7 @@ set whichwrap+=<,>,[,],h,l " Allow certain keys to move to the next line
 set nowrap " Display long lines as one line
 set linebreak " Don't break words when wrapping
 set scrolloff=8 " Keep 8 lines above/below cursor
-set sidescrolloff=8 " Keep 8 columns to the left/right of cursor
+set sidescrolloff=8 " Keep 8 columns to the left/right cursor
 set relativenumber " Use relative line numbers
 set numberwidth=4 " Number column width
 set shiftwidth=4 " Spaces per indentation
@@ -50,7 +49,7 @@ set cmdheight=1 " Command line height
 set autoindent " Auto-indent new lines
 set shortmess+=c " Don't show completion menu messages
 set iskeyword+=- " Treat hyphenated words as whole words
-set showmatch " show the matching part of pairs [] {} and ()
+set showmatch " Show the matching part of pairs [] {} and ()
 set laststatus=2 " Show status bar
 set statusline=%f " Path to the file
 set statusline+=%= " Switch to the right side
@@ -75,19 +74,19 @@ vnoremap <Space> <Nop>
 nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
 nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
 
-" clear highlights
+" Clear highlights
 nnoremap <Esc> :noh<CR>
 
-" save file
+" Save file
 nnoremap <C-s> :w<CR>
 
-" save file without auto-formatting
+" Save file without auto-formatting
 nnoremap <leader>sn :noautocmd w<CR>
 
-" quit file
+" Quit file
 nnoremap <C-q> :q<CR>
 
-" delete single character without copying into register
+" Delete single character without copying into register
 nnoremap x "_x
 
 " Vertical scroll and center
@@ -109,11 +108,11 @@ nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <leader>sb :buffers<CR>:buffer<Space>
 
-" increment/decrement numbers
+" Increment/decrement numbers
 nnoremap <leader>+ <C-a>
 nnoremap <leader>- <C-x>
 
-" window management
+" Window management
 nnoremap <leader>v <C-w>v
 nnoremap <leader>h <C-w>s
 nnoremap <leader>se <C-w>=
@@ -125,7 +124,7 @@ nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-h> :wincmd h<CR>
 nnoremap <C-l> :wincmd l<CR>
 
-" tabs
+" Tabs
 nnoremap <leader>to :tabnew<CR>
 nnoremap <leader>tx :tabclose<CR>
 nnoremap <leader>tn :tabn<CR>
@@ -134,7 +133,7 @@ nnoremap <leader>tp :tabp<CR>
 nnoremap <leader>x :bdelete<CR>
 nnoremap <leader>b :enew<CR>
 
-" toggle line wrapping
+" Toggle line wrapping
 nnoremap <leader>lw :set wrap!<CR>
 
 " Press jk fast to exit insert mode
@@ -148,12 +147,12 @@ inoremap kj <ESC>
 " Keep last yanked when pasting
 vnoremap p "_dP
 
-" Explicitly yank to system clipboard (highlighted and entire row)
-noremap <leader>y "+y
-noremap <leader>Y "+Y
+" Explicitly yank to system clipboard
+nnoremap <leader>y "+y
+nnoremap <leader>Y "+Y
 
 " Open file explorer
-noremap <silent> <leader>e :Lex<CR>
+nnoremap <silent> <leader>e :Lex<CR>
 
 
 " ========================================
@@ -169,14 +168,9 @@ colorscheme wildcharm
 set background=dark
 " hi Normal ctermbg=NONE guibg=NONE
 " hi NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
-" hi VertSplit guibg=NONE guifg=NONE ctermbg=NONE ctermfg=NONE
 
-" Sync clipboard with OS
-if system('uname -s') == "Darwin\n"
-  set clipboard=unnamed "OSX
-else
-  set clipboard=unnamedplus "Linux
-endif
+" Sync clipboard with macOS
+set clipboard=unnamed
 
 " True colors
 if !has('gui_running') && &term =~ '\%(screen\|tmux\)'
@@ -194,9 +188,10 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-let g:netrw_winsize = 25 
+let g:netrw_winsize = 25
+
 " Use 'l' instead of <CR> to open files
-augroup netrw_setup | au!
+augroup netrw_setup
+    au!
     au FileType netrw nmap <buffer> l <CR>
 augroup END
-
