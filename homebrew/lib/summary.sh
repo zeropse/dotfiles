@@ -78,7 +78,6 @@ show_summary() {
         local minutes=$((duration / 60))
         local seconds=$((duration % 60))
         
-        log_info "📊 System Summary:"
         log_info "  • Formulae installed: ${FORMULAE_COUNT:-0}"
         log_info "  • Casks installed: ${CASKS_COUNT:-0}"
         log_info "  • Homebrew version: ${HOMEBREW_VERSION:-Unknown}"

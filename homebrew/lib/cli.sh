@@ -24,12 +24,13 @@ show_usage() {
     echo "    $SCRIPT_NAME [OPTIONS]"
     echo
     echo -e "${BOLD}OPTIONS:${NC}"
-    echo "    --help              Show this help message"
+    echo "    -h, --help          Show this help message"
     echo "    --update            Update the Homebrew Upgrade Tool to the latest version"
     echo "    --uninstall         Remove the Homebrew Upgrade Tool from your system"
     echo
     echo -e "${BOLD}EXAMPLES:${NC}"
     echo "    $SCRIPT_NAME               Run full Homebrew maintenance"
+    echo "    $SCRIPT_NAME --help        Show usage information"
     echo "    $SCRIPT_NAME --update      Self-update the tool"
     echo "    $SCRIPT_NAME --uninstall   Remove the tool"
     echo
@@ -39,7 +40,7 @@ show_usage() {
 parse_arguments() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --help)
+            -h|--help)
                 show_usage
                 exit $EXIT_SUCCESS
                 ;;

@@ -95,6 +95,7 @@ uninstall_self() {
     log_warning "This will remove the Homebrew Upgrade Tool from your system."
     log_info "Installation directory: $install_dir"
     log_info "Command shortcut: $symlink_path"
+    log_info "Log file: $LOG_FILE"
     echo
     
     if [[ -t 0 ]]; then
@@ -109,6 +110,11 @@ uninstall_self() {
     echo
     log_info "Removing command shortcut..."
     rm -f "$symlink_path"
+    
+    if [[ -f "$LOG_FILE" ]]; then
+        log_info "Removing log file..."
+        rm -f "$LOG_FILE"
+    fi
     
     log_info "Removing backups..."
     find "$scripts_dir" -maxdepth 1 -name "homebrew-upgrade.backup.*" -exec rm -rf {} + 2>/dev/null || true
