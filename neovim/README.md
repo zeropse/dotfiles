@@ -53,18 +53,13 @@ git clone https://github.com/zeropse/dotfiles.git
 cd dotfiles
 ```
 
-### Link the Configuration
+### Install the Configuration
 
-Create the Neovim configuration directory:
+Create the Neovim configuration directory and copy the files:
 
 ```bash
 mkdir -p ~/.config
-```
-
-Create a symlink to the configuration:
-
-```bash
-ln -s "$(pwd)/neovim" ~/.config/nvim
+cp -r neovim ~/.config/nvim
 ```
 
 ### Launch Neovim
