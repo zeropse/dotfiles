@@ -1,14 +1,20 @@
 #!/bin/bash
 
-# Homebrew  Upgrade - Summary and Reporting
-# Functions for generating summary reports and statistics
+# Homebrew Upgrade Tool - Summary and Reporting
+# Functions for progress reporting, statistics, and final summary
+
+if [[ "${_BREW_SUMMARY_SH_:-}" == "true" ]]; then
+    return 0
+fi
+readonly _BREW_SUMMARY_SH_="true"
 
 # Source dependencies
-source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/logger.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+SCRIPT_DIR_SUMMARY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR_SUMMARY/config.sh"
+source "$SCRIPT_DIR_SUMMARY/logger.sh"
+source "$SCRIPT_DIR_SUMMARY/utils.sh"
 
-# Function to show initial banner
+# Show initial execution banner
 show_banner() {
     echo
     echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -18,7 +24,7 @@ show_banner() {
     log_info "Starting Homebrew Maintenance at $(date)"
 }
 
-# Function to collect system statistics
+# Collect initial system statistics
 collect_stats() {
     local stats_file="$TEMP_DIR/stats.txt"
     
@@ -26,14 +32,35 @@ collect_stats() {
         echo "HOMEBREW_VERSION='$(get_homebrew_version)'"
         echo "FORMULAE_COUNT='$(get_package_count formula)'"
         echo "CASKS_COUNT='$(get_package_count cask)'"
-        echo "BREW_PREFIX='$(brew --prefix)'"
+        echo "BREW_PREFIX='$(brew --prefix 2>/dev/null || echo "Unknown")'"
         echo "START_TIME='$(date +%s)'"
     } > "$stats_file"
     
     echo "$stats_file"
 }
 
-# Function to show summary
+# Show progress bar during step execution
+show_progress() {
+    local current_step="$1"
+    local total_steps="$2"
+    local step_name="$3"
+    
+    local percentage=$((current_step * 100 / total_steps))
+    local bar_length=30
+    local filled_length=$((current_step * bar_length / total_steps))
+    
+    local bar=""
+    for ((i=0; i<filled_length; i++)); do
+        bar+="█"
+    done
+    for ((i=filled_length; i<bar_length; i++)); do
+        bar+="░"
+    done
+    
+    log_info "Progress: [$bar] $percentage% ($current_step/$total_steps) - $step_name"
+}
+
+# Show summary dashboard
 show_summary() {
     local stats_file="$1"
     local end_time
@@ -47,18 +74,16 @@ show_summary() {
     if [[ -f "$stats_file" ]]; then
         source "$stats_file"
         
-        # Calculate duration
         local duration=$((end_time - START_TIME))
         local minutes=$((duration / 60))
         local seconds=$((duration % 60))
         
         log_info "📊 System Summary:"
-        log_info "  • Formulae installed: $FORMULAE_COUNT"
-        log_info "  • Casks installed: $CASKS_COUNT"
-        log_info "  • Homebrew version: $HOMEBREW_VERSION"
-        log_info "  • Installation path: $BREW_PREFIX"
+        log_info "  • Formulae installed: ${FORMULAE_COUNT:-0}"
+        log_info "  • Casks installed: ${CASKS_COUNT:-0}"
+        log_info "  • Homebrew version: ${HOMEBREW_VERSION:-Unknown}"
+        log_info "  • Installation path: ${BREW_PREFIX:-Unknown}"
         log_info "  • Duration: ${minutes}m ${seconds}s"
-        log_info "  • Mode: ✅ FULL MAINTENANCE"
     fi
 
     echo
@@ -66,47 +91,23 @@ show_summary() {
     log_success "Homebrew maintenance completed at $(date)"
 }
 
-# Function to show step progress
-show_progress() {
-    local current_step="$1"
-    local total_steps="$2"
-    local step_name="$3"
-    
-    local percentage=$((current_step * 100 / total_steps))
-    local bar_length=30
-    local filled_length=$((current_step * bar_length / total_steps))
-    
-    # Create progress bar
-    local bar=""
-    for ((i=0; i<filled_length; i++)); do
-        bar+="█"
-    done
-    for ((i=filled_length; i<bar_length; i++)); do
-        bar+="░"
-    done
-    
-    log_info "Progress: [$bar] $percentage% ($current_step/$total_steps) - $step_name"
-}
-
-# Function to show error summary (if any)
+# Show error summary if any errors were logged
 show_error_summary() {
-    local error_count
-    error_count=$(grep -c "ERROR" "$LOG_FILE" 2>/dev/null || echo "0")
-    
-    # Clean up the error count to ensure it's a single number
-    error_count=$(echo "$error_count" | tr -d ' \n\r' | head -1)
-    
-    # Ensure it's a valid number
-    if [[ ! "$error_count" =~ ^[0-9]+$ ]]; then
-        error_count=0
+    if [[ ! -f "$LOG_FILE" ]]; then
+        return 0
     fi
+
+    local error_count
+    error_count=$(grep -c "\[ERROR\]" "$LOG_FILE" 2>/dev/null || true)
+    error_count=$(echo "$error_count" | tr -d ' \n\r')
+    error_count=${error_count:-0}
     
     if [[ $error_count -gt 0 ]]; then
         echo
         log_warning "⚠️  $error_count error(s) occurred during maintenance"
-        log_info "Check the log file for details: $LOG_FILE"
+        log_info "Log file details: $LOG_FILE"
         log_info "Recent errors:"
-        grep "ERROR" "$LOG_FILE" | tail -3 | while read -r line; do
+        grep "\[ERROR\]" "$LOG_FILE" | tail -3 | while read -r line; do
             log_warning "  $line"
         done
     fi

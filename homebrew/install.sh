@@ -1,121 +1,98 @@
 #!/bin/bash
 
 # Homebrew Upgrade Tool Installer
-# This script installs the modular Homebrew upgrade tool to your system
+# Installs the modular Homebrew upgrade tool to ~/.scripts/homebrew-upgrade
 
 set -euo pipefail
 
-# Configuration
+# Global Configuration
 readonly TOOL_NAME="brew-upgrade"
 readonly REPO_URL="https://github.com/zeropse/dotfiles" 
 readonly INSTALL_DIR="$HOME/.scripts/homebrew-upgrade"
 readonly SYMLINK_PATH="$HOME/.scripts/brew-upgrade"
 
-# Colors for output
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m' # No Color
+# Output Formatting
+if [[ -t 1 ]]; then
+    readonly RED='\033[0;31m'
+    readonly GREEN='\033[0;32m'
+    readonly YELLOW='\033[1;33m'
+    readonly BLUE='\033[0;34m'
+    readonly NC='\033[0m'
+else
+    readonly RED=''
+    readonly GREEN=''
+    readonly YELLOW=''
+    readonly BLUE=''
+    readonly NC=''
+fi
 
-# Logging functions
-log_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
-}
-
-log_success() {
-    echo -e "${GREEN}✓${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}✗${NC} $1" >&2
-}
+log_info() { echo -e "${BLUE}ℹ${NC} $1"; }
+log_success() { echo -e "${GREEN}✓${NC} $1"; }
+log_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
+log_error() { echo -e "${RED}✗${NC} $1" >&2; }
 
 # Check prerequisites
 check_prerequisites() {
     log_info "Checking prerequisites..."
     
-    # Check if Homebrew is installed
     if ! command -v brew &> /dev/null; then
         log_error "Homebrew is not installed. Please install Homebrew first:"
-        echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+        echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         exit 1
     fi
     
-    # Check if required tools are available
     local required_tools=("curl" "tar" "mkdir")
     for tool in "${required_tools[@]}"; do
         if ! command -v "$tool" &> /dev/null; then
-            log_error "Required tool '$tool' is not installed"
+            log_error "Required tool '$tool' is missing."
             exit 1
         fi
     done
     
-    log_success "All prerequisites satisfied"
+    log_success "All prerequisites satisfied."
 }
 
-# Create installation directory
+# Create installation directory structure
 create_install_dir() {
-    log_info "Creating installation directory..."
-    
-    # Create the .scripts directory if it doesn't exist
+    log_info "Creating installation directories..."
     mkdir -p "$(dirname "$INSTALL_DIR")"
-    
-    # Create the specific tool directory
     mkdir -p "$INSTALL_DIR"
-    
-    log_success "Installation directory created: $INSTALL_DIR"
+    log_success "Created directory: $INSTALL_DIR"
 }
 
-# Install from remote repository
+# Download from GitHub repository
 install_remote() {
-    log_info "Downloading from repository..."
+    log_info "Downloading latest version from repository..."
     
-    # Create temporary directory
     local temp_dir
-    temp_dir=$(mktemp -d)
+    temp_dir=$(mktemp -d 2>/dev/null || mktemp -d -t 'brew-install')
     
-    # Download and extract
     if curl -sSL "$REPO_URL/archive/main.tar.gz" | tar -xz -C "$temp_dir" --strip-components=1; then
-        log_success "Downloaded latest version"
+        log_success "Downloaded source files."
     else
-        log_error "Failed to download from repository"
+        log_error "Failed to download from repository."
         rm -rf "$temp_dir"
         exit 1
     fi
     
-    # Copy files to installation directory
-    if [[ -f "$temp_dir/homebrew/brew-upgrade.sh" ]]; then
+    if [[ -f "$temp_dir/homebrew/brew-upgrade.sh" && -d "$temp_dir/homebrew/lib" ]]; then
         cp "$temp_dir/homebrew/brew-upgrade.sh" "$INSTALL_DIR/"
         chmod +x "$INSTALL_DIR/brew-upgrade.sh"
-        log_success "Installed main script"
-    else
-        log_error "Main script not found in download"
-        rm -rf "$temp_dir"
-        exit 1
-    fi
-    
-    if [[ -d "$temp_dir/homebrew/lib" ]]; then
+        
         cp -r "$temp_dir/homebrew/lib" "$INSTALL_DIR/"
         chmod +x "$INSTALL_DIR"/lib/*.sh
-        log_success "Installed library modules"
+        log_success "Installed main script and modules."
     else
-        log_error "Library directory not found in download"
+        log_error "Missing expected files in download archive."
         rm -rf "$temp_dir"
         exit 1
     fi
     
-    # Cleanup
     rm -rf "$temp_dir"
 }
 
-# Install from local files (for development)
+# Install from local files (development mode)
 install_local() {
-    # Use fallback for piped execution where BASH_SOURCE might not be available
     local script_dir=""
     if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
         script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -123,73 +100,62 @@ install_local() {
         script_dir="$(pwd)"
     fi
     
-    log_info "Installing from local files..."
+    log_info "Installing from local directory: $script_dir"
     
-    # Copy main script
-    if [[ -f "$script_dir/brew-upgrade.sh" ]]; then
+    if [[ -f "$script_dir/brew-upgrade.sh" && -d "$script_dir/lib" ]]; then
         cp "$script_dir/brew-upgrade.sh" "$INSTALL_DIR/"
         chmod +x "$INSTALL_DIR/brew-upgrade.sh"
-        log_success "Installed main script"
-    else
-        log_error "Main script not found in local directory"
-        exit 1
-    fi
-    
-    # Copy lib directory
-    if [[ -d "$script_dir/lib" ]]; then
+        
         cp -r "$script_dir/lib" "$INSTALL_DIR/"
         chmod +x "$INSTALL_DIR"/lib/*.sh
-        log_success "Installed library modules"
+        log_success "Installed main script and modules."
     else
-        log_error "Library directory not found in local directory"
+        log_error "Source files not found in local directory."
         exit 1
     fi
 }
 
-# Create symlink for easy access
+# Create executable symlink
 create_symlink() {
     log_info "Creating command shortcut..."
-    
-    # Remove existing symlink if it exists
-    [[ -L "$SYMLINK_PATH" ]] && rm -f "$SYMLINK_PATH"
-    
-    # Create symlink
+    rm -f "$SYMLINK_PATH"
     ln -s "$INSTALL_DIR/brew-upgrade.sh" "$SYMLINK_PATH"
-    
-    log_success "Command shortcut created: $SYMLINK_PATH"
+    log_success "Created shortcut: $SYMLINK_PATH -> $INSTALL_DIR/brew-upgrade.sh"
 }
 
-# Update PATH if needed
+# Update user PATH environment variable if needed
 update_path() {
     local scripts_dir="$(dirname "$SYMLINK_PATH")"
     
-    # Check if .scripts is in PATH
     if [[ ":$PATH:" != *":$scripts_dir:"* ]]; then
         log_info "Adding $scripts_dir to PATH..."
         
-        # Determine which shell config file to update
         local shell_config=""
-        if [[ "$SHELL" == *"zsh"* ]]; then
+        if [[ "${SHELL:-}" == *"zsh"* ]]; then
             shell_config="$HOME/.zshrc"
-        elif [[ "$SHELL" == *"bash"* ]]; then
+        elif [[ "${SHELL:-}" == *"bash"* ]]; then
             shell_config="$HOME/.bashrc"
+        elif [[ "${SHELL:-}" == *"fish"* ]]; then
+            shell_config="$HOME/.config/fish/config.fish"
+        else
+            shell_config="$HOME/.profile"
         fi
         
-        if [[ -n "$shell_config" ]]; then
+        if [[ -f "$shell_config" || -w "$HOME" ]]; then
             echo "" >> "$shell_config"
-            echo "# Add .scripts to PATH for Homebrew Upgrade Tool" >> "$shell_config"
+            echo "# Homebrew Upgrade Tool PATH" >> "$shell_config"
             echo "export PATH=\"$scripts_dir:\$PATH\"" >> "$shell_config"
-            log_success "Added to PATH in $shell_config"
-            log_warning "Please restart your terminal or run: source $shell_config"
+            log_success "Added $scripts_dir to PATH in $shell_config"
+            log_warning "Please restart terminal or run: source $shell_config"
         else
-            log_warning "Could not determine shell config file. Please add $scripts_dir to your PATH manually."
+            log_warning "Please manually add $scripts_dir to your PATH."
         fi
     else
-        log_success "PATH already configured"
+        log_success "PATH is already configured correctly."
     fi
 }
 
-# Show banner
+# Header banner
 show_banner() {
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
@@ -198,7 +164,7 @@ show_banner() {
     echo
 }
 
-# Show installation summary
+# Installation completion summary
 show_summary() {
     echo
     echo "╔══════════════════════════════════════════════════════════════╗"
@@ -208,30 +174,28 @@ show_summary() {
     echo "📁 Installation directory: $INSTALL_DIR"
     echo "🔗 Command shortcut: $SYMLINK_PATH"
     echo
-    echo "📚 For more information, run: brew-upgrade --help"
+    echo "📚 To start maintenance, run: brew-upgrade"
+    echo "📚 For help, run: brew-upgrade --help"
     echo
 }
 
 # Confirmation prompt
 confirm_installation() {
-    echo
-    echo "This will install the Homebrew Upgrade Tool with the following actions:"
-    echo
-    echo "  1. ✓ Check prerequisites (Homebrew, curl, tar, mkdir)"
-    echo "  2. ✓ Create installation directory: $INSTALL_DIR"
-    echo "  3. ✓ Install tool files (brew-upgrade.sh and lib/)"
-    echo "  4. ✓ Create command shortcut: $SYMLINK_PATH"
-    echo "  5. ✓ Configure PATH if needed"
+    local auto_yes="${1:-false}"
+    
+    echo "This will install the Homebrew Upgrade Tool:"
+    echo "  1. ✓ Check prerequisites (Homebrew, curl, tar)"
+    echo "  2. ✓ Install script files into: $INSTALL_DIR"
+    echo "  3. ✓ Create command shortcut: $SYMLINK_PATH"
+    echo "  4. ✓ Configure shell PATH if needed"
     echo
     
     if [[ -d "$INSTALL_DIR" ]]; then
-        log_warning "Existing installation found - this will update it"
+        log_warning "Existing installation found at $INSTALL_DIR (will be updated)"
     fi
     
-    # Check if we're in a pipe (non-interactive mode)
-    if [[ ! -t 0 ]]; then
-        log_info "Remote installation detected - starting automatically..."
-        echo
+    if [[ "$auto_yes" == "true" || ! -t 0 ]]; then
+        log_info "Proceeding with installation automatically..."
         return 0
     fi
     
@@ -239,60 +203,45 @@ confirm_installation() {
     read -r response
     
     if [[ ! "$response" =~ ^[Yy]$ ]]; then
-        echo
-        log_info "Installation cancelled by user"
-        echo "To install later, run: ./install.sh"
+        log_info "Installation cancelled by user."
         exit 0
     fi
     
-    echo
-    log_success "Installation confirmed, proceeding..."
+    log_success "Installation confirmed."
 }
 
-# Main installation function
+# Main installer execution
 main() {
-    # Parse command line arguments
-    case "${1:-}" in
-        --help|-h)
-            echo "Homebrew Upgrade Tool Installer"
-            echo
-            echo "Usage: $0 [OPTIONS]"
-            echo
-            echo "Options:"
-            echo "  --help, -h     Show this help message"
-            echo
-            echo "The installer will:"
-            echo "  1. Check prerequisites"
-            echo "  2. Create installation directory"
-            echo "  3. Install tool files"
-            echo "  4. Create command shortcut"
-            echo "  5. Provide usage instructions"
-            echo
-            echo "Related commands:"
-            echo "  brew-upgrade --update    Update the tool after installation"
-            echo "  brew-upgrade --uninstall Remove the tool after installation"
-            echo
-            echo "Examples:"
-            echo "  $0                              # Interactive installation"
-            echo "  curl -sSL <url> | bash          # Auto-install when piped"
-            exit 0
-            ;;
-        *)
-            if [[ -n "${1:-}" ]]; then
+    local auto_yes=false
+    
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --help)
+                echo "Homebrew Upgrade Tool Installer"
+                echo
+                echo "Usage: $0 [OPTIONS]"
+                echo
+                echo "Options:"
+                echo "  --help    Show this help message"
+                echo "  -y, --yes Automatic yes to prompts"
+                exit 0
+                ;;
+            -y|--yes)
+                auto_yes=true
+                ;;
+            *)
                 log_error "Unknown option: $1"
-                echo "Use --help for usage information"
                 exit 1
-            fi
-            ;;
-    esac
+                ;;
+        esac
+        shift
+    done
     
     show_banner
-    confirm_installation
+    confirm_installation "$auto_yes"
     check_prerequisites
     create_install_dir
     
-    # Check if we're running from a local development directory
-    # Use fallback for piped execution where BASH_SOURCE might not be available
     local script_dir=""
     if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
         script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -311,5 +260,4 @@ main() {
     show_summary
 }
 
-# Run main function
 main "$@"
