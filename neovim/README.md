@@ -1,21 +1,98 @@
 # Neovim Configuration
 
-Personal Neovim configuration written in Lua and managed with [lazy.nvim](https://github.com/folke/lazy.nvim).
+<p align="left">
+<img src="https://img.shields.io/badge/Neovim-57AD31?style=for-the-badge&logo=neovim&logoColor=white" alt="Neovim">
+<img src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white" alt="Lua">
+</p>
 
-The configuration includes LSP support, autocompletion, syntax highlighting, fuzzy finding, file navigation, and terminal UI customization.
+This is my **Neovim configuration**, written in **Lua**. It uses **lazy.nvim** as the plugin manager and is designed to be clean, efficient, and easy to maintain. It includes support for LSP, fuzzy finding, syntax highlighting, autocompletion, file navigation, and various UI enhancements.
+
+## Requirements
+
+The configuration requires:
+
+- **Neovim** `>= 0.10.0`
+- **Git**
+- **C compiler** such as GCC or Clang
+- **ripgrep** — required for Telescope live grep
+- **fd** — recommended for file searching
+- **Nerd Font** — required for terminal icons
+
+Some plugins may have additional dependencies depending on the language and development tools being used.
+
+## Installation
+
+### macOS
+
+Using Homebrew:
+
+```bash
+brew install neovim ripgrep fd gcc
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### Arch Linux
+
+```bash
+sudo pacman -S neovim ripgrep fd gcc
+```
+
+### Ubuntu / Debian
+
+```bash
+sudo apt update
+sudo apt install neovim ripgrep fd-find build-essential
+```
+
+### Clone the Repository
+
+Clone the dotfiles repository:
+
+```bash
+git clone https://github.com/zeropse/dotfiles.git
+cd dotfiles
+```
+
+### Link the Configuration
+
+Create the Neovim configuration directory:
+
+```bash
+mkdir -p ~/.config
+```
+
+Create a symlink to the configuration:
+
+```bash
+ln -s "$(pwd)/neovim" ~/.config/nvim
+```
+
+### Launch Neovim
+
+Start Neovim:
+
+```bash
+nvim
+```
+
+On the first launch:
+
+- `lazy.nvim` bootstraps automatically.
+- Configured plugins are installed.
+- Mason installs the configured language servers and development tools.
 
 ## Features
 
-- **Plugin Management** — Uses `lazy.nvim` for plugin installation and management.
+- **Plugin Management** — Plugin installation and management through `lazy.nvim`.
 - **Fuzzy Finding** — File search, live grep, buffers, diagnostics, and other search functionality through `telescope.nvim`.
-- **LSP** — Language Server Protocol support with `mason.nvim`, `nvim-lspconfig`, and configured formatters and tools.
+- **LSP Integration** — Language Server Protocol support with `mason.nvim`, `nvim-lspconfig`, formatters, and linters.
 - **Syntax Highlighting** — Tree-sitter based syntax highlighting and parsing.
 - **File Explorer** — File navigation through `neo-tree.nvim`.
 - **Completion** — Autocompletion with `nvim-cmp` and snippets through `LuaSnip`.
-- **Interface** — Nord colorscheme with `lualine.nvim`, `bufferline.nvim`, and a configured startup dashboard.
-- **Keybindings** — `which-key.nvim` provides interactive keybinding discovery.
+- **Interface** — Nord colorscheme with `lualine.nvim`, `bufferline.nvim`, and `alpha-nvim`.
+- **Keybindings** — Interactive keybinding discovery through `which-key.nvim`.
 
-## Directory Structure
+## Repository Structure
 
 ```text
 neovim/
@@ -37,88 +114,20 @@ neovim/
         └── ...
 ```
 
-## Requirements
+### Module Overview
 
-The configuration requires:
+| Directory / File          | Purpose                                 |
+| :------------------------ | :-------------------------------------- |
+| `init.lua`                | Main configuration entry point          |
+| `lua/core/options.lua`    | General Neovim options and UI settings  |
+| `lua/core/keymaps.lua`    | Global keybindings                      |
+| `lua/core/lazy_setup.lua` | Plugin manager configuration            |
+| `lua/plugins/`            | Individual plugin configuration modules |
+| `nvim_cheat.md`           | Neovim keybinding and command reference |
 
-- **Neovim** `>= 0.10.0`
-- **Git**
-- **C compiler** such as GCC or Clang
-- **ripgrep** — required for Telescope live grep
-- **fd** — recommended for file searching
-- **Nerd Font** — required for terminal icons
+## Usage
 
-Some plugins may have additional dependencies depending on the language or tools being used.
-
-## Installation
-
-### 1. Install Dependencies
-
-#### macOS
-
-Using Homebrew:
-
-```bash
-brew install neovim ripgrep fd gcc
-```
-
-For icons, install a Nerd Font such as JetBrainsMono Nerd Font:
-
-```bash
-brew install --cask font-jetbrains-mono-nerd-font
-```
-
-#### Arch Linux
-
-```bash
-sudo pacman -S neovim ripgrep fd gcc
-```
-
-#### Ubuntu / Debian
-
-```bash
-sudo apt update
-sudo apt install neovim ripgrep fd-find build-essential
-```
-
-### 2. Clone the Repository
-
-Clone the dotfiles repository:
-
-```bash
-git clone https://github.com/zeropse/dotfiles.git
-cd dotfiles
-```
-
-### 3. Link the Configuration
-
-Create the Neovim configuration directory if it does not already exist:
-
-```bash
-mkdir -p ~/.config
-```
-
-Create a symlink to the configuration:
-
-```bash
-ln -s "$(pwd)/neovim" ~/.config/nvim
-```
-
-### 4. Start Neovim
-
-Launch Neovim:
-
-```bash
-nvim
-```
-
-On the first launch:
-
-- `lazy.nvim` bootstraps automatically.
-- Configured plugins are installed.
-- Mason installs the configured language servers and development tools.
-
-## Useful Commands
+### Useful Commands
 
 The following commands can be run inside Neovim:
 
@@ -128,7 +137,7 @@ The following commands can be run inside Neovim:
 | `:Mason`       | Manage language servers and development tools |
 | `:checkhealth` | Check Neovim and plugin dependencies          |
 
-## Keybindings
+### Keybindings
 
 The `<Space>` key is used as the leader key.
 
@@ -149,6 +158,20 @@ Press `<Space>` in Normal mode to view available keybindings through `which-key`
 
 For the complete list, see [`nvim_cheat.md`](./nvim_cheat.md).
 
+## Troubleshooting
+
+### Missing Icons or Broken Symbols
+
+Ensure a Nerd Font is installed and configured as your terminal font.
+
+### Telescope Live Grep Fails
+
+`telescope.nvim` requires `ripgrep` (`rg`) to be installed and available in your `PATH`.
+
+### Tree-sitter Compilation Errors
+
+Tree-sitter parsers require a C compiler such as GCC or Clang.
+
 ## License
 
-MIT © zeropse
+See the repository for licensing information.

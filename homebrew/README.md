@@ -1,8 +1,8 @@
 # Homebrew Upgrade Tool
 
 <p align="left">
-  <img src="https://img.shields.io/badge/macOS-Apple%20Silicon%20%7C%20Intel-000000?style=for-the-badge&logo=apple&logoColor=white" alt="macOS Supported">
-  <img src="https://img.shields.io/badge/Homebrew-v4.0+-FDEE21?style=for-the-badge&logo=homebrew&logoColor=black" alt="Homebrew Supported">
+  <img src="https://img.shields.io/badge/macOS-Apple%20Silicon-00000f?style=for-the-badge&logo=apple&logoColor=white" alt="macOS Supported">
+  <img src="https://img.shields.io/badge/Homebrew-FDEE21?style=for-the-badge&logo=homebrew&logoColor=black" alt="Homebrew Supported">
   <img src="https://img.shields.io/badge/Shell-Bash%20%7C%20Zsh-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white" alt="Shell Supported">
 </p>
 
