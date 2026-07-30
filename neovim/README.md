@@ -7,6 +7,12 @@
 
 This is my **Neovim configuration**, written in **Lua**. It uses **lazy.nvim** as the plugin manager and is designed to be clean, efficient, and easy to maintain. It includes support for LSP, fuzzy finding, syntax highlighting, autocompletion, file navigation, and various UI enhancements.
 
+> **Note:** This configuration has been superseded by **[zero.nvim](https://github.com/zeropse/zero.nvim)**, my modern, LazyVim-powered Neovim setup.
+>
+> **zero.nvim** is the recommended choice for new users, as this configuration is no longer actively maintained and may contain outdated plugins, settings, or conventions. If you’re looking for a more up-to-date Neovim experience, I strongly recommend using **zero.nvim** instead.
+>
+> This repository is kept primarily for reference and historical purposes.
+
 ## Requirements
 
 The configuration requires:
