@@ -90,7 +90,6 @@
 ## Plugin-Specific Keybindings
 
 - **Telescope**:
-
   - Find files: `<leader>sf`
   - Live grep: `<leader>sg`
   - Help tags: `<leader>sh`
