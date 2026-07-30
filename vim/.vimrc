@@ -1,5 +1,4 @@
 " Main .vimrc file
-" This file will be overwritten by the update process
 
 " Source the local additions file
 if filereadable(expand("~/.vimrc.local"))
