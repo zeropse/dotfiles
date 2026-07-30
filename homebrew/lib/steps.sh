@@ -14,9 +14,23 @@ source "$SCRIPT_DIR_STEPS/config.sh"
 source "$SCRIPT_DIR_STEPS/logger.sh"
 source "$SCRIPT_DIR_STEPS/utils.sh"
 
+# Pre-flight cleanup helper for stale locks
+clear_stale_locks() {
+    local brew_prefix
+    brew_prefix="$(brew --prefix 2>/dev/null || echo "")"
+    if [[ -n "$brew_prefix" && -d "$brew_prefix/var/homebrew/locks" ]]; then
+        # Safely remove lock files only if no active brew process is running
+        if ! pgrep -x "brew" >/dev/null 2>&1; then
+            rm -f "$brew_prefix/var/homebrew/locks"/*.lock 2>/dev/null || true
+        fi
+    fi
+}
+
 # Step 1: Update Homebrew core and taps
 step_update_homebrew() {
     log_step "1" "Updating Homebrew index and taps"
+    
+    clear_stale_locks
     
     if run_command "brew update" "Updating Homebrew"; then
         log_success "Homebrew index updated successfully!"
@@ -84,6 +98,7 @@ step_upgrade_formulae() {
     
     if [[ "$formulae_count" -eq 0 ]]; then
         log_success "No formulae need upgrading."
+        echo "0" > "$TEMP_DIR/upgraded_formulae_count.txt"
         return 0
     fi
     
@@ -91,6 +106,7 @@ step_upgrade_formulae() {
     
     if run_command "brew upgrade --formula" "Upgrading formulae"; then
         log_success "Formulae upgraded successfully!"
+        echo "$formulae_count" > "$TEMP_DIR/upgraded_formulae_count.txt"
         return 0
     else
         log_error "Failed to upgrade formulae"
@@ -108,6 +124,7 @@ step_upgrade_casks() {
     
     if [[ "$casks_count" -eq 0 ]]; then
         log_success "No casks need upgrading."
+        echo "0" > "$TEMP_DIR/upgraded_casks_count.txt"
         return 0
     fi
     
@@ -128,6 +145,8 @@ step_upgrade_casks() {
             failed_casks+=("$cask")
         fi
     done < "$outdated_casks_file"
+    
+    echo "$success_count" > "$TEMP_DIR/upgraded_casks_count.txt"
     
     if [[ ${#failed_casks[@]} -gt 0 ]]; then
         log_warning "Cask upgrade results: $success_count/$total_count successful."
@@ -168,7 +187,7 @@ step_autoremove() {
 step_final_cleanup() {
     log_step "8" "Performing final system cleanup"
     
-    if run_command "brew cleanup -s" "Cleaning stale caches and old downloads"; then
+    if run_command "brew cleanup --prune=all -s" "Purging old bottle archives, caches, and stale downloads"; then
         log_success "Final cleanup completed successfully!"
         return 0
     else

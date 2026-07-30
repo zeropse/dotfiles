@@ -38,11 +38,14 @@ source ~/.bashrc
 
 ## Features
 
+- Pre-flight cleanup of stale Homebrew lock files to prevent process conflict errors.
 - Caches the result of `brew outdated` to avoid repeated package checks.
 - Supports both Homebrew formulae and casks.
 - Upgrades casks individually so a failed cask does not stop other upgrades.
 - Provides interactive progress indicators when running in a TTY.
 - Falls back to non-interactive output when used by scripts or background processes.
+- Deep cache purging (`brew cleanup --prune=all -s`) to reclaim maximum disk space.
+- Displays upgraded formulae and cask counts in the final execution summary.
 - Writes clean, ANSI-free logs to `~/.brew-maintenance.log`.
 - Uses modular shell libraries with include guards to prevent duplicate sourcing.
 - Includes built-in update and uninstall commands.
@@ -74,7 +77,7 @@ brew-upgrade
    brew update
    ```
 
-   Refreshes Homebrew's formula and cask indexes.
+   Clears stale lockfiles (if any) and refreshes Homebrew's formula and cask indexes.
 
 2. **Run Initial Health Check**
 
@@ -123,7 +126,7 @@ brew-upgrade
 8. **Clean Homebrew**
 
    ```bash
-   brew cleanup -s
+   brew cleanup --prune=all -s
    ```
 
    Removes outdated downloads, cached files, old package versions, and related temporary files.

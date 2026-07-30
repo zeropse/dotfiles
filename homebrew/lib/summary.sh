@@ -78,6 +78,12 @@ show_summary() {
         local minutes=$((duration / 60))
         local seconds=$((duration % 60))
         
+        local upgraded_formulae_count upgraded_casks_count
+        upgraded_formulae_count=$(cat "$TEMP_DIR/upgraded_formulae_count.txt" 2>/dev/null || echo "0")
+        upgraded_casks_count=$(cat "$TEMP_DIR/upgraded_casks_count.txt" 2>/dev/null || echo "0")
+        
+        log_info "  • Formulae upgraded: ${upgraded_formulae_count:-0}"
+        log_info "  • Casks upgraded: ${upgraded_casks_count:-0}"
         log_info "  • Formulae installed: ${FORMULAE_COUNT:-0}"
         log_info "  • Casks installed: ${CASKS_COUNT:-0}"
         log_info "  • Homebrew version: ${HOMEBREW_VERSION:-Unknown}"
