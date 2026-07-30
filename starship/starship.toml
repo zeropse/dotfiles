@@ -19,6 +19,7 @@ $package\
 $aws\
 $docker_context\
 $jobs\
+$battery\
 $line_break\
 $cmd_duration\
 $line_break\
@@ -104,6 +105,26 @@ symbol = "✦ "
 style = "red"
 number_threshold = 1
 format = "[$symbol]($style)"
+
+# Battery module
+[battery]
+full_symbol = "󰁹 "
+charging_symbol = "󰂄 "
+discharging_symbol = "󰂃 "
+unknown_symbol = "󰂑 "
+empty_symbol = "󰂎 "
+
+[[battery.display]]
+threshold = 15
+style = "bold red"
+
+[[battery.display]]
+threshold = 30
+style = "bold orange"
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
 
 # Command duration module
 [cmd_duration]
